@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "express-sqlite-charts.fullname" . }}
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ include "express-sqlite-charts.name" . }}
+        chart: {{ include "express-sqlite-charts.chart" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "your-express-image:tag"
+          ports:
+            - name: http
+              containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "express-sqlite-charts.fullname" . }}
+spec:
+  selector:
+    app: {{ include "express-sqlite-charts.name" . }}
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  type: LoadBalancer
